@@ -10,7 +10,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// <summary>
     /// 
     /// </summary>
-    class glTFNodes : IEnumerable<glTFNode> {
+    public sealed class glTFNodes : IEnumerable<glTFNode> {
         readonly List<glTFNode> _items = new List<glTFNode>();
         readonly Stack<glTFNode> _openItems = new Stack<glTFNode>();
 

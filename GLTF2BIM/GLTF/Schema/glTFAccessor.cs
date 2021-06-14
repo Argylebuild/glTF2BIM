@@ -13,7 +13,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// </summary>
     // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#accessors
     [Serializable]
-    class glTFAccessor : glTFProperty {
+    public sealed class glTFAccessor : glTFProperty {
         /// <summary>
         /// The index of the bufferView.
         /// </summary>

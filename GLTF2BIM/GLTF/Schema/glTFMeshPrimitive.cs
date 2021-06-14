@@ -11,7 +11,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// Properties defining where the GPU should look to find the mesh and material data.
     /// </summary>
     // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#meshes
-    class glTFMeshPrimitive : glTFProperty {
+    public sealed class glTFMeshPrimitive : glTFProperty {
 
         [JsonProperty("attributes")]
         public glTFAttributes Attributes { get; set; }

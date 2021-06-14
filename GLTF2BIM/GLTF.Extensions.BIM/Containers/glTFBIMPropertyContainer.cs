@@ -7,7 +7,7 @@ using GLTF2BIM.GLTF.Extensions.BIM.BaseTypes;
 
 namespace GLTF2BIM.GLTF.Extensions.BIM.Containers {
     [Serializable]
-    class glTFBIMPropertyContainer : glTFBIMContainer {
+    public class glTFBIMPropertyContainer : glTFBIMContainer {
         string _uri;
         glTFBIMPropertyData _propData = new glTFBIMPropertyData();
 

@@ -8,6 +8,6 @@ namespace GLTF2BIM.GLTF.Schema {
     /// <summary>
     /// 
     /// </summary>
-    public class glTFExtras {
+    public abstract class glTFExtras {
     }
 }

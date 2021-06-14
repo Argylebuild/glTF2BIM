@@ -12,7 +12,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// </summary>
     // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0
     [Serializable]
-    class glTF {
+    public sealed class glTF {
         [JsonProperty("asset")]
         public glTFAsset Asset { get; set; } = null;
 

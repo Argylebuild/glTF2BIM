@@ -13,7 +13,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// </summary>
     // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#materials
     [Serializable]
-    class glTFMaterial : glTFProperty {
+    public sealed class glTFMaterial : glTFProperty {
         [JsonProperty("name")]
         public string Name { get; set; }
 
@@ -42,7 +42,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// </summary>
     // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#materials
     [Serializable]
-    class glTFPBRMetallicRoughness {
+    public sealed class glTFPBRMetallicRoughness {
         [JsonProperty("baseColorFactor")]
         public float[] BaseColorFactor { get; set; }
 

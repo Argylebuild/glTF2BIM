@@ -6,7 +6,7 @@ using GLTF2BIM.GLTF.Schema;
 using GLTF2BIM.GLTF.BufferSegments.BaseTypes;
 
 namespace GLTF2BIM.GLTF {
-    sealed partial class GLTFBuilder {
+    public sealed partial class GLTFBuilder {
         const int maxBufferSize = int.MaxValue;
 
         string _name;

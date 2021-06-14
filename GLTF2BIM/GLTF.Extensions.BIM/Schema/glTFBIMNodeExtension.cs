@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 using GLTF2BIM.GLTF.Extensions.BIM.BaseTypes;
 
-namespace GLTF2BIM.GLTF.Extensions.BIM {
+namespace GLTF2BIM.GLTF.Extensions.BIM.Schema {
     [Serializable]
     public abstract class glTFBIMNodeExtension : glTFBIMExtension {
         [JsonProperty("id", Order = 1)]
@@ -14,37 +14,37 @@ namespace GLTF2BIM.GLTF.Extensions.BIM {
 
         // e.g. revit::Door::MyFamily::MyFamilyType
         [JsonProperty("taxonomies", Order = 2)]
-        public List<string> Taxonomies { get; set; } = new List<string>();
+        public virtual List<string> Taxonomies { get; set; } = new List<string>();
 
         [JsonProperty("classes", Order = 3)]
-        public List<string> Classes { get; set; } = new List<string>();
+        public virtual List<string> Classes { get; set; } = new List<string>();
 
         [JsonProperty("mark", Order = 4)]
-        public string Mark { get; set; }
+        public virtual string Mark { get; set; }
 
         [JsonProperty("description", Order = 5)]
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         [JsonProperty("comment", Order = 6)]
-        public string Comment { get; set; }
+        public virtual string Comment { get; set; }
 
         [JsonProperty("uri", Order = 7)]
-        public string Uri { get; set; }
+        public virtual string Uri { get; set; }
 
         [JsonProperty("dataUrl", Order = 8)]
-        public string DataUrl { get; set; }
+        public virtual string DataUrl { get; set; }
 
         [JsonProperty("imageUrl", Order = 9)]
-        public string ImageUrl { get; set; }
+        public virtual string ImageUrl { get; set; }
 
-        [JsonProperty("level", Order = 10)]
-        public string Level { get; set; }
+        [JsonProperty("level", Order = 11)]
+        public virtual string Level { get; set; }
 
-        [JsonProperty("bounds", Order = 11)]
-        public glTFBIMBounds Bounds { get; set; }
+        [JsonProperty("bounds", Order = 12)]
+        public virtual glTFBIMBounds Bounds { get; set; }
 
         [JsonProperty("properties", Order = 99)]
-        public Dictionary<string, object> Properties { get; set; }
+        public virtual Dictionary<string, object> Properties { get; set; }
     }
 
     [Serializable]
@@ -53,6 +53,11 @@ namespace GLTF2BIM.GLTF.Extensions.BIM {
                              float maxx, float maxy, float maxz) {
             Min = new glTFBIMVector(minx, miny, minz);
             Max = new glTFBIMVector(maxx, maxy, maxz);
+        }
+
+        public glTFBIMBounds(glTFBIMVector min, glTFBIMVector max) {
+            Min = min;
+            Max = max;
         }
 
         public glTFBIMBounds(glTFBIMBounds bounds) {

@@ -12,7 +12,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// </summary>
     // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#buffers-and-buffer-views
     [Serializable]
-    class glTFBufferView {
+    public sealed class glTFBufferView {
         /// <summary>
         /// The index of the buffer.
         /// </summary>

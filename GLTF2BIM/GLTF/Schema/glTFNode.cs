@@ -12,7 +12,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// </summary>
     // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#nodes-and-hierarchy
     [Serializable]
-    class glTFNode: glTFProperty {
+    public sealed class glTFNode : glTFProperty {
         /// <summary>
         /// The user-defined name of this object
         /// </summary>

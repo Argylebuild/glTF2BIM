@@ -12,7 +12,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// </summary>
     // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#scenes
     [Serializable]
-    class glTFScene : glTFProperty {
+    public sealed class glTFScene : glTFProperty {
         [JsonProperty("name")]
         public string Name { get; set; }
 

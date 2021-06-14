@@ -10,7 +10,7 @@ using GLTF2BIM.GLTF.BufferSegments;
 using GLTF2BIM.GLTF.Package;
 
 namespace GLTF2BIM.GLTF {
-    sealed partial class GLTFBuilder {
+    public sealed partial class GLTFBuilder {
         uint AppendNodeToScene(uint idx) {
             if (PeekScene() is glTFScene scene) {
                 if (!_gltf.Nodes.IsOpen())

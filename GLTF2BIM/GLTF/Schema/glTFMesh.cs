@@ -11,7 +11,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// The array of primitives defining the mesh of an object.
     /// </summary>
     // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#meshes
-    class glTFMesh : glTFProperty {
+    public sealed class glTFMesh : glTFProperty {
 
         [JsonProperty("primitives")]
         public List<glTFMeshPrimitive> Primitives { get; set; }

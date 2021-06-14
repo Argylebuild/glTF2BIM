@@ -14,7 +14,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#asset
     /// </summary>
     [Serializable]
-    class glTFAsset : glTFProperty {
+    public sealed class glTFAsset : glTFProperty {
         [JsonProperty("version")]
         public string Version = "2.0";
 

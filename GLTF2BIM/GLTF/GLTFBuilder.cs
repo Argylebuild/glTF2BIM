@@ -12,7 +12,7 @@ using GLTF2BIM.GLTF.Package.BaseTypes;
 using GLTF2BIM.GLTF.BufferSegments.BaseTypes;
 
 namespace GLTF2BIM.GLTF {
-    sealed partial class GLTFBuilder {
+    public sealed partial class GLTFBuilder {
         public GLTFBuilder(string name) {
             _name = name;
             _gltf = new glTF();

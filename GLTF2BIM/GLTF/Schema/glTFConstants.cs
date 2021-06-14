@@ -9,7 +9,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// glTF Mesh Modes
     /// </summary>
     // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#primitivemode
-    enum glTFMeshMode {
+    public enum glTFMeshMode {
         POINTS,
         LINES,
         LINE_LOOP,
@@ -22,7 +22,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// <summary>
     /// Accessor data type identifier
     /// </summary>
-    enum glTFAccessorType {
+    public enum glTFAccessorType {
         SCALAR,
         VEC2,
         VEC3,
@@ -37,7 +37,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// types.
     /// https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#accessor-element-size
     /// </summary>
-    enum glTFAccessorComponentType {
+    public enum glTFAccessorComponentType {
         BYTE = 5120,
         UNSIGNED_BYTE = 5121,
         SHORT = 5122,
@@ -51,7 +51,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// array buffers.
     /// https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#buffers-and-buffer-views
     /// </summary>
-    enum glTFBufferViewTargets {
+    public enum glTFBufferViewTargets {
         ARRAY_BUFFER = 34962, // signals vertex data
         ELEMENT_ARRAY_BUFFER = 34963 // signals index or face data
     }
@@ -59,7 +59,7 @@ namespace GLTF2BIM.GLTF.Schema {
     /// <summary>
     /// Material alpha mode
     /// </summary>
-    enum glTFAlphaMode {
+    public enum glTFAlphaMode {
         OPAQUE,
         MASK,
         BLEND
