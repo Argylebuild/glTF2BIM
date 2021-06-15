@@ -123,9 +123,6 @@
   <data name="GLTFExtensionName" xml:space="preserve">
     <value>EXT_bim_metadata</value>
   </data>
-  <data name="GLTFGeneratorName" xml:space="preserve">
-    <value>GLTFRevitExport</value>
-  </data>
   <data name="ItemNotExist" xml:space="preserve">
     <value>Item does not exist in this listed tree</value>
   </data>
@@ -146,9 +143,6 @@
   </data>
   <data name="NoSupportedView" xml:space="preserve">
     <value>Exporting non-3d views are not supported in this Revit version</value>
-  </data>
-  <data name="SceneRootNodeName" xml:space="preserve">
-    <value>{0}</value>
   </data>
   <data name="VertexFaceIsRequired" xml:space="preserve">
     <value>Vertex and Face info is required</value>

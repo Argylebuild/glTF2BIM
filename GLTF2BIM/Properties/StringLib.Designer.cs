@@ -79,15 +79,6 @@ namespace GLTF2BIM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GLTFRevitExport.
-        /// </summary>
-        internal static string GLTFGeneratorName {
-            get {
-                return ResourceManager.GetString("GLTFGeneratorName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Item does not exist in this listed tree.
         /// </summary>
         internal static string ItemNotExist {
@@ -147,15 +138,6 @@ namespace GLTF2BIM.Properties {
         internal static string NoSupportedView {
             get {
                 return ResourceManager.GetString("NoSupportedView", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0}.
-        /// </summary>
-        internal static string SceneRootNodeName {
-            get {
-                return ResourceManager.GetString("SceneRootNodeName", resourceCulture);
             }
         }
         
