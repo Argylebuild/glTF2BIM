@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
+    <AssemblyName>Argyle.glTF2BIM</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <ProjectReference Include="..\..\Argyle.Newtonsoft.Json\Src\Newtonsoft.Json\Newtonsoft.Json.csproj" />
   </ItemGroup>
 
   <ItemGroup>
