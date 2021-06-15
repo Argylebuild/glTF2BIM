@@ -21,8 +21,9 @@ namespace GLTF2BIM.GLTF {
         /// <summary>
         /// Pack the constructed glTF data into a container
         /// </summary>
-        public List<GLTFPackageItem> Pack(bool singleBinary = true) {
+        public List<GLTFPackageItem> Pack(GLTFBuilderOptions options) {
             // TODO: Add glb option
+            options = options ?? new GLTFBuilderOptions();
 
             int CreateBuffer(List<BufferSegment> segments, int startIndex, int bufferCounter, out byte[] binData) {
                 // add the buffers to the gltf and to the bundle
@@ -55,7 +56,7 @@ namespace GLTF2BIM.GLTF {
                     }
 
                     // if buffer has enough space
-                    if ((bufferBytes.Count + padding + bytes.Length) < maxBufferSize) {
+                    if ((bufferBytes.Count + padding + bytes.Length) < options.MaxBinarySize) {
                         // add padding
                         if (padding > 0)
                             bufferBytes.AddRange(new byte[padding]);
@@ -89,7 +90,7 @@ namespace GLTF2BIM.GLTF {
                         // if buffer is empty, this segment is too large for 
                         // max buffer size
                         if (bufferBytes.Count == 0) {
-                            throw new Exception($"A single segment data is larger than max buffer size ({bytes.Length} > {maxBufferSize})");
+                            throw new Exception($"A single segment data is larger than max buffer size ({bytes.Length} > {options.MaxBinarySize})");
                         }
                         // grab all the collected data
                         binData = bufferBytes.ToArray();
@@ -120,12 +121,12 @@ namespace GLTF2BIM.GLTF {
                 creatingFirstBuffer = (bufferIndex == 0);
                 allSegmentsDone = lastIndex == _bufferSegments.Count;
 
-                if (creatingFirstBuffer && singleBinary && !allSegmentsDone)
+                if (creatingFirstBuffer && options.UseSingleBinary && !allSegmentsDone)
                     throw new Exception("Data is too large for a single buffer. Disable the single binary export option");
 
                 // otherwise add the binary buffer to the package and move on
                 string bufferName = $"{_name}{bufferIndex}.bin";
-                if (singleBinary)
+                if (options.UseSingleBinary)
                     bufferName = $"{_name}.bin";
                 bundleItems.Add(
                     new GLTFPackageBinaryItem(bufferName, binData)
