@@ -36,7 +36,6 @@ namespace GLTF2BIM.GLTF {
 
                     // align the data correctly
                     uint dataSize = 0;
-                    // calculate necessary padding
                     switch (seg.DataType) {
                         case glTFAccessorComponentType.SHORT:
                         case glTFAccessorComponentType.UNSIGNED_SHORT:
@@ -47,15 +46,16 @@ namespace GLTF2BIM.GLTF {
                             dataSize = 4;
                             break;
                     }
-
-                    // calculate padding
+                    // calculate necessary padding
                     int padding = 0;
                     if (dataSize > 0) {
                         var bufferSize = bufferBytes.Count;
-                        padding = (int)(Math.Ceiling(bufferSize / (float)dataSize) * dataSize) - bufferSize;
+                        // cast to double in important as the result of length/size
+                        // might be larger than the single precision
+                        padding = (int)(Math.Ceiling(bufferSize / (double)dataSize) * dataSize) - bufferSize;
                     }
 
-                    // if buffer has enough space
+                    // if buffer has enough space (for new data plus previous padding)
                     if ((bufferBytes.Count + padding + bytes.Length) < options.MaxBinarySize) {
                         // add padding
                         if (padding > 0)
