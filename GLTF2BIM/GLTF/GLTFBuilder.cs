@@ -346,13 +346,13 @@ namespace GLTF2BIM.GLTF {
                 // process face data
                 uint maxIndex = faces.Max();
                 BufferSegment faceBuffer;
-                if (maxIndex < 0xFF) {
+                if (maxIndex <= 0xFF) {
                     var byteFaces = new List<byte>();
                     foreach (var face in faces)
                         byteFaces.Add(Convert.ToByte(face));
                     faceBuffer = new BufferScalar1Segment(byteFaces.ToArray());
                 }
-                else if (maxIndex < 0xFFFF) {
+                else if (maxIndex <= 0xFFFF) {
                     var shortFaces = new List<ushort>();
                     foreach (var face in faces)
                         shortFaces.Add(Convert.ToUInt16(face));
