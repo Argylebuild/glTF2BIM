@@ -377,3 +377,4 @@ $RECYCLE.BIN/
 # ignore build and release artifacts
 release/*.exe
 build/*
+.idea/
