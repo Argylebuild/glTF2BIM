@@ -45,6 +45,9 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema {
 
         [JsonProperty("properties", Order = 99)]
         public virtual Dictionary<string, object> Properties { get; set; }
+        
+        [JsonProperty("bucketId", Order = 100)]
+        public virtual string Bucket { get; set; }
     }
 
     [Serializable]
