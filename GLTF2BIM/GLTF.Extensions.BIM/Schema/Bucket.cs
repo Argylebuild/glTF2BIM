@@ -18,7 +18,8 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema
 		public string Description { get; set; }
 		/// <summary>
 		/// All elements in this collection will display this color in the AR viewer.
-		/// User may also apply colors to view in authoring software. 
+		/// User may also apply colors to view in authoring software.
+		/// Colors stored as RGB <= 1.0
 		/// </summary>
 		[JsonProperty("color", Order = 3)]
 		public Vector3 Color { get; set; }
@@ -56,7 +57,7 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema
 		/// Standard minimum constructor. Populates basic values and random color. 
 		/// </summary>
 		/// <param name="name"></param>
-		private Bucket(string name)
+		public Bucket(string name)
 		{
 			Name = name;
 			Description = "";
@@ -74,7 +75,7 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema
 		/// <param name="isIncludedInDollhouse"></param>
 		/// <param name="isOccluding"></param>
 		/// <param name="isProximityBased"></param>
-		private Bucket(string name, string description, Vector3 color, 
+		public Bucket(string name, string description, Vector3 color, 
 			bool isVisibleAtStart, bool isIncludedInDollhouse, bool isOccluding, 
 			bool isProximityBased)
 		{
@@ -90,7 +91,7 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema
 		/// <summary>
 		/// This constructor is only used for deserialization.
 		/// </summary>
-		private Bucket() { }
+		public Bucket() { }
 
 		#endregion -----------------/CTOR ====
 
