@@ -74,7 +74,20 @@ namespace GLTF2BIM.Properties {
         /// </summary>
         internal static string GLTFExtensionName {
             get {
-                return ResourceManager.GetString("GLTFExtensionName", resourceCulture);
+                string result = null;
+
+                //TODO: this is a hack to get the extension name from the resource file. Need to replace with real solution. 
+                try  
+                {
+                    result = ResourceManager.GetString("GLTFExtensionName", resourceCulture);
+                    Console.WriteLine("EXt Name is: " + result);
+                }
+                catch (Exception e)
+                {
+                    result = "EXT_bim_metadata";
+                }
+
+                return result;
             }
         }
         
