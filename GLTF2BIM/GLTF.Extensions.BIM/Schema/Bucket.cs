@@ -9,38 +9,38 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema
 		/// <summary>
 		/// Simple name describing this collection. 
 		/// </summary>
-		[JsonProperty("name", Order = 1)]
+		[JsonProperty("name", Order = 1, NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 		/// <summary>
 		/// A more detailed description of this collection.
 		/// </summary>
-		[JsonProperty("description", Order = 2)]
+		[JsonProperty("description", Order = 2, NullValueHandling = NullValueHandling.Ignore)]
 		public string Description { get; set; }
 		/// <summary>
 		/// All elements in this collection will display this color in the AR viewer.
 		/// User may also apply colors to view in authoring software.
 		/// Colors stored as RGB <= 1.0
 		/// </summary>
-		[JsonProperty("color", Order = 3)]
+		[JsonProperty("color", Order = 3, NullValueHandling = NullValueHandling.Ignore)]
 		public Vector3 Color { get; set; }
 		/// <summary>
 		/// If true, when app opens this project, everything in the collection will be visible
 		/// as long as other requirements are met. (E.G. Link is on and in range)
 		/// </summary>
-		[JsonProperty("isVisibleAtStart", Order = 4)]
+		[JsonProperty("isVisibleAtStart", Order = 4, NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsVisibleAtStart { get; set; }
 		/// <summary>
 		/// The minature view doesn't need to show everything in the model but only what is helpful for navigation.
 		/// Core and shell, structure, floors, and walls are all recommended. 
 		/// </summary>
-		[JsonProperty("isIncludedInDollhouse", Order = 5)]
+		[JsonProperty("isIncludedInDollhouse", Order = 5, NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsIncludedInDollhouse { get; set; }
 
 		/// <summary>
 		/// For visual simplicity, it is helpful for some elements to hide elements behind them.
 		/// Walls, floors, Roofs and sometimes ceilings are good candidates for occlusion.
 		/// </summary>
-		[JsonProperty("isOccluding", Order = 6)]
+		[JsonProperty("isOccluding", Order = 6, NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsOccluding { get; set; }
 
 		/// <summary>
@@ -48,16 +48,17 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema
 		/// Large elements that are critical for navigation should be rendered at all times.
 		/// Floors or Core and Shell, for example should be set to false. 
 		/// </summary>
-		[JsonProperty("isProximityBased", Order = 7)]
+		[JsonProperty("isProximityBased", Order = 7, NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsProximityBased { get; set; } = true;
 
-		#region ==== CTOR ====------------------
 
-		/// <summary>
-		/// Standard minimum constructor. Populates basic values and random color. 
-		/// </summary>
-		/// <param name="name"></param>
-		public Bucket(string name)
+        #region ==== CTOR ====------------------
+
+        /// <summary>
+        /// Standard minimum constructor. Populates basic values and random color. 
+        /// </summary>
+        /// <param name="name"></param>
+        public Bucket(string name)
 		{
 			Name = name;
 			Description = "";
