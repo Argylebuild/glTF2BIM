@@ -316,7 +316,7 @@ namespace GLTF2BIM.GLTF {
         private int SearchMesh(List<glTFMeshPrimitive> primitives)
         {
             // TODO: approaches using a dictionary instead of LINQ.
-            var mesh = _gltf.Meshes.FirstOrDefault(m => m.Primitives.Equals(primitives));
+            var mesh = _gltf.Meshes.FirstOrDefault(m => m.Primitives.SequenceEqual(primitives));
 
             return _gltf.Meshes.IndexOf(mesh);
         }
@@ -456,9 +456,7 @@ namespace GLTF2BIM.GLTF {
             // TODO: use dictionary
             var material = _gltf.Materials.FirstOrDefault(m => 
             m.Name == name &&
-            m.PBRMetallicRoughness.BaseColorFactor[0] == color[0] &&
-            m.PBRMetallicRoughness.BaseColorFactor[1] == color[1] &&
-            m.PBRMetallicRoughness.BaseColorFactor[2] == color[2]);
+            m.PBRMetallicRoughness.BaseColorFactor.SequenceEqual(color));
 
             return _gltf.Materials.IndexOf(material);
         }
