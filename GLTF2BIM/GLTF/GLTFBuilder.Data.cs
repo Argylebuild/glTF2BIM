@@ -12,5 +12,7 @@ namespace GLTF2BIM.GLTF {
 
         readonly List<BufferSegment> _bufferSegments = new List<BufferSegment>();
         readonly Queue<glTFMeshPrimitive> _primQueue = new Queue<glTFMeshPrimitive>();
+        readonly Dictionary<string, int> meshesInstancing;
+        readonly Dictionary<string, uint> materialsInstancing;
     }
 }
