@@ -10,7 +10,7 @@ using GLTF2BIM.GLTF.BufferSegments;
 using GLTF2BIM.GLTF.Package;
 using GLTF2BIM.GLTF.Package.BaseTypes;
 using GLTF2BIM.GLTF.BufferSegments.BaseTypes;
-
+using System.Text;
 
 namespace GLTF2BIM.GLTF {
     public sealed partial class GLTFBuilder {
@@ -378,18 +378,18 @@ namespace GLTF2BIM.GLTF {
             return materialIdx;
         }
 
-
         public string GetPrimitivesKey(List<glTFMeshPrimitive> primitives)
         {
-            string key = string.Empty;
+            StringBuilder keyBuilder = new StringBuilder();
 
             foreach (var primitive in primitives)
             {
-                key += $"{primitive.Attributes.Normal}:{primitive.Attributes.Position}:{primitive.Indices}:{primitive.Material}:{primitive.Mode}:"; 
+                keyBuilder.Append($"{primitive.Attributes.Normal}:{primitive.Attributes.Position}:{primitive.Indices}:{primitive.Material}:{primitive.Mode}:");
             }
 
-            return key;
+            return keyBuilder.ToString();
         }
+
         public string GetMaterialKey(string name, float[] color)
         {
             return $":{name}:{color[0]}:{color[1]}:{color[2]}";
