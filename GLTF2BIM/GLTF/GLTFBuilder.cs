@@ -298,6 +298,9 @@ namespace GLTF2BIM.GLTF {
             if (PeekNode() is glTFNode currentNode) {
                 if (_primQueue.Count > 0) {
 
+                    // TODO MEETING: Efficient gathering of data into memory before writing the glTF (Meshes)
+                    // Before adding new meshes to the .gltf file, we are looking for them to reuse it, if it already exists.
+
                     // searching for an already existent mesh
                     int meshIdx = SearchMesh(_primQueue.ToList());
 
@@ -320,9 +323,7 @@ namespace GLTF2BIM.GLTF {
         {
             var key = GetPrimitivesKey(primitives);
 
-            int meshIdx = default;
-
-            if (meshesInstancing.TryGetValue(key, out meshIdx))
+            if (meshesInstancing.TryGetValue(key, out int meshIdx))
                 return meshIdx;
 
             return -1;
@@ -331,9 +332,7 @@ namespace GLTF2BIM.GLTF {
         {
             var key = GetMaterialKey(name, color);
 
-            uint materialIdx = default;
-
-            if (materialsInstancing.TryGetValue(key, out materialIdx))
+            if (materialsInstancing.TryGetValue(key, out var materialIdx))
                 return materialIdx;
 
             return null; 
@@ -384,7 +383,9 @@ namespace GLTF2BIM.GLTF {
 
             foreach (var primitive in primitives)
             {
-                keyBuilder.Append($"{primitive.Attributes.Normal}:{primitive.Attributes.Position}:{primitive.Indices}:{primitive.Material}:{primitive.Mode}:");
+                //// TODO MEETING: Not considering materials for comparison purpose now.
+                //keyBuilder.Append($"{primitive.Attributes.Normal}:{primitive.Attributes.Position}:{primitive.Indices}:{primitive.Material}:{primitive.Mode}:");
+                keyBuilder.Append($"{primitive.Attributes.Normal}:{primitive.Attributes.Position}:{primitive.Indices}:{primitive.Mode}:");
             }
 
             return keyBuilder.ToString();
@@ -395,7 +396,6 @@ namespace GLTF2BIM.GLTF {
             return $":{name}:{color[0]}:{color[1]}:{color[2]}";
         }
 
-
         #endregion
 
         #region Node Mesh
@@ -403,6 +403,9 @@ namespace GLTF2BIM.GLTF {
             // ensure vertex and face data is available
             if (vertices is null || faces is null)
                 throw new Exception(StringLib.VertexFaceIsRequired);
+
+            // TODO MEETING: Efficient gathering of data into memory before writing the glTF (Accessors/Buffers).
+            // Before adding new accessors/buffers to the .bin file, we are looking for them to reuse it, if it already exists.
 
             if (PeekNode() is glTFNode) {
                 // process vertex data
@@ -452,11 +455,11 @@ namespace GLTF2BIM.GLTF {
                 // queue the primitive
                 _primQueue.Enqueue(
                     new glTFMeshPrimitive {
-                        Indices = (uint)fBuffIdx,
+                    Indices = (uint)fBuffIdx,
                         Attributes = new glTFAttributes {
-                            Position = (uint)vBuffIdx,
-                            Normal = nBuffIdx >= 0 ? (uint)nBuffIdx : (uint?)null
-                        }
+                        Position = (uint)vBuffIdx,
+                        Normal = nBuffIdx >= 0 ? (uint)nBuffIdx : (uint?)null
+                    }
                     }
                 );
 
@@ -473,6 +476,9 @@ namespace GLTF2BIM.GLTF {
             if (PeekNode() is glTFNode currentNode) {
                 if (_primQueue.Count > primitiveIndex) {
                     var prim = _primQueue.ElementAt((int)primitiveIndex);
+
+                    // TODO MEETING: Efficient gathering of data into memory before writing the glTF (Materials)
+                    // Before adding new materials to the .gltf file, we are looking for them to reuse it, if it already exists.
 
                     if (_gltf.Materials is null)
                         _gltf.Materials = new List<glTFMaterial>();

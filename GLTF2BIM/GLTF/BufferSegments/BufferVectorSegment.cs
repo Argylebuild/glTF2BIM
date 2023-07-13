@@ -21,19 +21,30 @@ namespace GLTF2BIM.GLTF.BufferSegments {
 
         public override uint Count => (uint)(Data.Length / 3);
 
-        void SetBounds(float[] vectors) {
-            // TODO: improve logic and performance
-            List<float> vx = new List<float>();
-            List<float> vy = new List<float>();
-            List<float> vz = new List<float>();
-            for (int i = 0; i < vectors.Length; i += 3) {
-                vx.Add(vectors[i]);
-                vy.Add(vectors[i + 1]);
-                vz.Add(vectors[i + 2]);
+        void SetBounds(float[] vectors)
+        {
+            float minX = vectors[0];
+            float minY = vectors[1];
+            float minZ = vectors[2];
+            float maxX = vectors[0];
+            float maxY = vectors[1];
+            float maxZ = vectors[2];
+
+            for (int i = 3; i < vectors.Length; i += 3)
+            {
+                float x = vectors[i];
+                float y = vectors[i + 1];
+                float z = vectors[i + 2];
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+                if (z < minZ) minZ = z;
+                if (z > maxZ) maxZ = z;
             }
 
-            _min = new float[] { vx.Min(), vy.Min(), vz.Min() };
-            _max = new float[] { vx.Max(), vy.Max(), vz.Max() };
+            _min = new float[] { minX, minY, minZ };
+            _max = new float[] { maxX, maxY, maxZ };
         }
     }
 }
