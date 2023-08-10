@@ -24,4 +24,10 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="bin\Debug\net47\Argyle.glTF2BIM.dll" />
+    <Content Include="bin\Debug\net47\Argyle.glTF2BIM.pdb" />
+    <Content Include="bin\Debug\net47\Newtonsoft.Json.dll" />
+  </ItemGroup>
+
 </Project>
