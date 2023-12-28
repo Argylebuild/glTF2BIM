@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Newtonsoft.Json;
 
 using GLTF2BIM.GLTF.Extensions.BIM.BaseTypes;
 using GLTF2BIM.GLTF.Extensions.BIM.Containers;
+using Newtonsoft.Json.Serialization;
 
 namespace GLTF2BIM.GLTF.Extensions.BIM.Schema {
     [Serializable]
     public abstract class glTFBIMAssetExtension : glTFBIMExtension {
         [JsonProperty("id", Order = 1)]
         public string Id { get; set; }
-
+        
         [JsonProperty("application", Order = 2)]
         public virtual string App { get; set; }
 
@@ -35,5 +35,8 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema {
 
         [JsonProperty("properties", Order = 9)]
         public virtual Dictionary<string, object> Properties { get; set; }
+        
+        [JsonProperty("buckets", Order = 10)]
+        public virtual List<Bucket> Buckets { get; set; }
     }
 }

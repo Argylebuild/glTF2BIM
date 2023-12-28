@@ -7,5 +7,7 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.BaseTypes {
     [Serializable]
     public abstract class glTFBIMExtension: glTFExtension {
         public override string Name => StringLib.GLTFExtensionName;
+
+        public string Version { get; set; } = "v1.2";
     }
 }
