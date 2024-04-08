@@ -34,7 +34,7 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema {
         public virtual List<glTFBIMPropertyContainer> Containers { get; set; }
 
         [JsonProperty("properties", Order = 9)]
-        public virtual Dictionary<string, object> Properties { get; set; }
+        public virtual Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
         
         [JsonProperty("buckets", Order = 10)]
         public virtual List<Bucket> Buckets { get; set; }
