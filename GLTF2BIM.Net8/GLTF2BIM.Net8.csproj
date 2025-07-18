@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- ============== core settings ============== -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>Argyle.glTF2BIM</AssemblyName>
+  </PropertyGroup>
+
+  <!-- ============== 2026 build configuration ============== -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2026|Any CPU'">
+    <OutputPath>..\..\..\build\Release2026\</OutputPath> <!-- mirrors legacy layout -->
+    <DefineConstants>REVIT;REVIT2026</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <!-- ============== source sharing ============== -->
+  <ItemGroup>
+    <Compile Include="..\GLTF2BIM\**\*.cs"
+            Exclude="..\GLTF2BIM.Net8\**\*.*;
+                      ..\GLTF2BIM\obj\**\*.*;
+                      ..\GLTF2BIM\bin\**\*.*;
+                      ..\GLTF2BIM\**\*.g.cs;
+                      ..\GLTF2BIM\**\*.g.i.cs" />
+                      
+    <EmbeddedResource Include="..\GLTF2BIM\**\*.resx"
+                      Exclude="..\GLTF2BIM\obj\**\*.*;
+                              ..\GLTF2BIM\bin\**\*.*" />
+  </ItemGroup>
+
+
+  <!-- ============== NuGet ============== -->
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>
