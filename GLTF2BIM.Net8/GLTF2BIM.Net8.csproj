@@ -7,8 +7,15 @@
     <ImplicitUsings>false</ImplicitUsings>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>Argyle.glTF2BIM</AssemblyName>
+    <Configurations>Debug;Release;Release2025;Release2026</Configurations>
   </PropertyGroup>
 
+  <!-- ============== 2025 build configuration ============== -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2025|Any CPU'">
+    <OutputPath>..\..\..\build\Release2025\</OutputPath> <!-- mirrors legacy layout -->
+    <DefineConstants>REVIT;REVIT2025</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
   <!-- ============== 2026 build configuration ============== -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2026|Any CPU'">
     <OutputPath>..\..\..\build\Release2026\</OutputPath> <!-- mirrors legacy layout -->
@@ -18,16 +25,9 @@
 
   <!-- ============== source sharing ============== -->
   <ItemGroup>
-    <Compile Include="..\GLTF2BIM\**\*.cs"
-            Exclude="..\GLTF2BIM.Net8\**\*.*;
-                      ..\GLTF2BIM\obj\**\*.*;
-                      ..\GLTF2BIM\bin\**\*.*;
-                      ..\GLTF2BIM\**\*.g.cs;
-                      ..\GLTF2BIM\**\*.g.i.cs" />
+    <Compile Include="..\GLTF2BIM\**\*.cs" Exclude="..\GLTF2BIM.Net8\**\*.*;&#xD;&#xA;                      ..\GLTF2BIM\obj\**\*.*;&#xD;&#xA;                      ..\GLTF2BIM\bin\**\*.*;&#xD;&#xA;                      ..\GLTF2BIM\**\*.g.cs;&#xD;&#xA;                      ..\GLTF2BIM\**\*.g.i.cs" />
                       
-    <EmbeddedResource Include="..\GLTF2BIM\**\*.resx"
-                      Exclude="..\GLTF2BIM\obj\**\*.*;
-                              ..\GLTF2BIM\bin\**\*.*" />
+    <EmbeddedResource Include="..\GLTF2BIM\**\*.resx" Exclude="..\GLTF2BIM\obj\**\*.*;&#xD;&#xA;                              ..\GLTF2BIM\bin\**\*.*" />
   </ItemGroup>
 
 
