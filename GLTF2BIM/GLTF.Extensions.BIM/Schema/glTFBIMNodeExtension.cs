@@ -44,7 +44,7 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema {
         public virtual glTFBIMBounds Bounds { get; set; }
 
         [JsonProperty("properties", Order = 99)]
-        public virtual Dictionary<string, object> Properties { get; set; }
+        public virtual Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
         
         [JsonProperty("bucketId", Order = 100)]
         public virtual string Bucket { get; set; }

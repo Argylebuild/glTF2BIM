@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Newtonsoft.Json;
@@ -26,7 +26,7 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Containers
 
         public bool HasPropertyData = true;
 
-        public void Record(string id, Dictionary<string, object> props) => _propData.Record(id, props);
+        public void Record(string id, Dictionary<string, Tuple<string, object>> props) => _propData.Record(id, props);
 
         public string Pack()
         {
@@ -54,14 +54,17 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Containers
             [JsonProperty("values", Order = 4)]
             public List<object> Values { get; set; } = new List<object>();
 
-            public void Record(string id, Dictionary<string, object> props)
+            [JsonProperty("types", Order = 5)]
+            public List<string> Types { get; set; } = new List<string>();
+
+            public void Record(string id, Dictionary<string, Tuple<string, object>> props)
             {
                 // add properties and group
                 var grp = new glTFBIMPropertyDataGroup();
 
                 foreach (var propData in props)
                 {
-                    if (propData.Value is null)
+                    if (propData.Value.Item2 is null)
                         continue;
 
                     // add key
@@ -72,17 +75,18 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Containers
                     else
                     {
                         Keys.Add(propData.Key);
+                        Types.Add(propData.Value.Item1);
                         grp.Keys.Add((uint)Keys.Count - 1);
                     }
 
                     // add value
-                    if (Values.IndexOf(propData.Value) is int valueIdx && valueIdx != -1)
+                    if (Values.IndexOf(propData.Value.Item2) is int valueIdx && valueIdx != -1)
                     {
                         grp.Values.Add((uint)valueIdx);
                     }
                     else
                     {
-                        Values.Add(propData.Value);
+                        Values.Add(propData.Value.Item2);
                         grp.Values.Add((uint)Values.Count - 1);
                     }
                 }
