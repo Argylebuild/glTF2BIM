@@ -24,9 +24,9 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2026|Any CPU'">
-    <OutputPath>..\..\..\build\Release2025\</OutputPath>
-    <DefineConstants>REVIT;REVIT2025</DefineConstants>
-    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\build\Release2026\</OutputPath>
+    <DefineConstants>REVIT;REVIT2026</DefineConstants>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <!-- ============== 2026 build configuration ============== -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2026|Any CPU'">
