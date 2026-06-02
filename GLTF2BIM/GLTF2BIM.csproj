@@ -3,7 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
     <AssemblyName>Argyle.glTF2BIM</AssemblyName>
-    <Configurations>Debug;Release</Configurations>
+    <PlatformTarget>x64</PlatformTarget>
+    <Configurations>Debug;Release;Debug2025;Debug2026</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
