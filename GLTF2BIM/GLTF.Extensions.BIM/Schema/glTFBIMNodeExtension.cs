@@ -43,6 +43,10 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema {
         [JsonProperty("bounds", Order = 12)]
         public virtual glTFBIMBounds Bounds { get; set; }
 
+        // dominant (max) pen weight of line primitives on this node
+        [JsonProperty("lineWeight", Order = 13, NullValueHandling = NullValueHandling.Ignore)]
+        public virtual int? LineWeight { get; set; }
+
         [JsonProperty("properties", Order = 99)]
         public virtual Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
         

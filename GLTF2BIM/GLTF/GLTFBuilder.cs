@@ -399,6 +399,44 @@ namespace GLTF2BIM.GLTF {
         #endregion
 
         #region Node Mesh
+        private int GetOrAddVectorSegment(float[] vectors) {
+            var vectorBuffer = new BufferVectorSegment(vectors);
+            var buffIdx = _bufferSegments.IndexOf(vectorBuffer);
+            if (buffIdx < 0) {
+                _bufferSegments.Add(vectorBuffer);
+                buffIdx = _bufferSegments.Count - 1;
+            }
+            return buffIdx;
+        }
+
+        private int GetOrAddIndexSegment(uint[] indices) {
+            // narrow index component type to the smallest that fits
+            uint maxIndex = indices.Max();
+            BufferSegment indexBuffer;
+            if (maxIndex <= 0xFF) {
+                var byteIndices = new List<byte>();
+                foreach (var index in indices)
+                    byteIndices.Add(Convert.ToByte(index));
+                indexBuffer = new BufferScalar1Segment(byteIndices.ToArray());
+            }
+            else if (maxIndex <= 0xFFFF) {
+                var shortIndices = new List<ushort>();
+                foreach (var index in indices)
+                    shortIndices.Add(Convert.ToUInt16(index));
+                indexBuffer = new BufferScalar2Segment(shortIndices.ToArray());
+            }
+            else {
+                indexBuffer = new BufferScalar4Segment(indices);
+            }
+
+            var iBuffIdx = _bufferSegments.IndexOf(indexBuffer);
+            if (iBuffIdx < 0) {
+                _bufferSegments.Add(indexBuffer);
+                iBuffIdx = _bufferSegments.Count - 1;
+            }
+            return iBuffIdx;
+        }
+
         public uint AddPrimitive(float[] vertices, float[] normals, uint[] faces) {
             // ensure vertex and face data is available
             if (vertices is null || faces is null)
@@ -406,48 +444,15 @@ namespace GLTF2BIM.GLTF {
 
             if (PeekNode() is glTFNode) {
                 // process vertex data
-                var vertexBuffer = new BufferVectorSegment(vertices);
-                var vBuffIdx = _bufferSegments.IndexOf(vertexBuffer);
-                if (vBuffIdx < 0) {
-                    _bufferSegments.Add(vertexBuffer);
-                    vBuffIdx = _bufferSegments.Count - 1;
-                }
+                var vBuffIdx = GetOrAddVectorSegment(vertices);
 
                 // process normal data if available
                 int nBuffIdx = -1;
-                if (normals != null) {
-                    var normalBuffer = new BufferVectorSegment(normals);
-                    nBuffIdx = _bufferSegments.IndexOf(normalBuffer);
-                    if (nBuffIdx < 0) {
-                        _bufferSegments.Add(normalBuffer);
-                        nBuffIdx = _bufferSegments.Count - 1;
-                    }
-                }
+                if (normals != null)
+                    nBuffIdx = GetOrAddVectorSegment(normals);
 
                 // process face data
-                uint maxIndex = faces.Max();
-                BufferSegment faceBuffer;
-                if (maxIndex <= 0xFF) {
-                    var byteFaces = new List<byte>();
-                    foreach (var face in faces)
-                        byteFaces.Add(Convert.ToByte(face));
-                    faceBuffer = new BufferScalar1Segment(byteFaces.ToArray());
-                }
-                else if (maxIndex <= 0xFFFF) {
-                    var shortFaces = new List<ushort>();
-                    foreach (var face in faces)
-                        shortFaces.Add(Convert.ToUInt16(face));
-                    faceBuffer = new BufferScalar2Segment(shortFaces.ToArray());
-                }
-                else {
-                    faceBuffer = new BufferScalar4Segment(faces);
-                }
-
-                var fBuffIdx = _bufferSegments.IndexOf(faceBuffer);
-                if (fBuffIdx < 0) {
-                    _bufferSegments.Add(faceBuffer);
-                    fBuffIdx = _bufferSegments.Count - 1;
-                }
+                var fBuffIdx = GetOrAddIndexSegment(faces);
 
                 // queue the primitive
                 _primQueue.Enqueue(
@@ -457,6 +462,34 @@ namespace GLTF2BIM.GLTF {
                             Position = (uint)vBuffIdx,
                             Normal = nBuffIdx >= 0 ? (uint)nBuffIdx : (uint?)null
                         }
+                    }
+                );
+
+                // return primitive index
+                return (uint)_primQueue.Count - 1;
+            }
+            else
+                throw new Exception(StringLib.NoParentNode);
+        }
+
+        public uint AddLinePrimitive(float[] vertices, uint[] indices) {
+            // ensure vertex and index data is available
+            if (vertices is null || indices is null)
+                throw new Exception(StringLib.VertexFaceIsRequired);
+
+            if (PeekNode() is glTFNode) {
+                var vBuffIdx = GetOrAddVectorSegment(vertices);
+
+                // indices are independent segment pairs (glTF LINES)
+                var iBuffIdx = GetOrAddIndexSegment(indices);
+
+                _primQueue.Enqueue(
+                    new glTFMeshPrimitive {
+                        Indices = (uint)iBuffIdx,
+                        Attributes = new glTFAttributes {
+                            Position = (uint)vBuffIdx
+                        },
+                        Mode = glTFMeshMode.LINES
                     }
                 );
 
