@@ -357,6 +357,10 @@ namespace GLTF2BIM.GLTF {
         }
         private uint CreateMaterial(string name, float[] color, glTFExtension[] exts, glTFExtras extras)
         {
+            // fully opaque materials must say so; the schema default (BLEND)
+            // previously leaked onto every material regardless of alpha
+            bool isTransparent = color != null && color.Length > 3 && color[3] < 1f;
+
             // it is a new material, proceed to add it!
             var material = new glTFMaterial()
             {
@@ -367,6 +371,7 @@ namespace GLTF2BIM.GLTF {
                     MetallicFactor = 0f,
                     RoughnessFactor = 1f,
                 },
+                AlphaMode = isTransparent ? glTFAlphaMode.BLEND : glTFAlphaMode.OPAQUE,
                 Extensions = exts?.ToDictionary(x => x.Name, x => x),
                 Extras = extras
             };
