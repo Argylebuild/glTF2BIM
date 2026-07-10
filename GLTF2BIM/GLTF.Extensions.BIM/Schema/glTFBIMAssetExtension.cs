@@ -38,5 +38,14 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema {
         
         [JsonProperty("buckets", Order = 10)]
         public virtual List<Bucket> Buckets { get; set; }
+
+        /// <summary>
+        /// World-space origin (glTF axes, meters, double precision) that was subtracted
+        /// from every node translation and bounds value in this file at export time.
+        /// Absolute/georeferenced coordinates = exported values + originOffset. Null or
+        /// absent means the file was not rebased (legacy exports).
+        /// </summary>
+        [JsonProperty("originOffset", Order = 11)]
+        public virtual double[] OriginOffset { get; set; }
     }
 }
