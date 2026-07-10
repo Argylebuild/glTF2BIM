@@ -13,5 +13,6 @@ namespace GLTF2BIM.GLTF {
         public readonly Queue<glTFMeshPrimitive> _primQueue = new Queue<glTFMeshPrimitive>();
         public readonly Dictionary<string, int> meshesInstancing;
         public readonly Dictionary<string, uint> materialsInstancing;
+        public readonly Dictionary<string, uint> texturesInstancing = new Dictionary<string, uint>();
     }
 }
