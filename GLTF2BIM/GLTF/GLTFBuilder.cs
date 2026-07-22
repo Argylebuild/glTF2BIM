@@ -327,16 +327,16 @@ namespace GLTF2BIM.GLTF {
 
             return -1;
         }
-        private uint? SearchMaterial(string name, float[] color)
+        private uint? SearchMaterial(string name, float[] color, uint? textureIdx = null)
         {
-            var key = GetMaterialKey(name, color);
+            var key = GetMaterialKey(name, color, textureIdx);
 
             uint materialIdx = default;
 
             if (materialsInstancing.TryGetValue(key, out materialIdx))
                 return materialIdx;
 
-            return null; 
+            return null;
         }
 
         private int CreateMesh()
@@ -355,8 +355,13 @@ namespace GLTF2BIM.GLTF {
 
             return meshIdx;
         }
-        private uint CreateMaterial(string name, float[] color, glTFExtension[] exts, glTFExtras extras)
+        private uint CreateMaterial(string name, float[] color, uint? textureIdx, glTFExtension[] exts, glTFExtras extras)
         {
+            // the glTF spec requires baseColorFactor to be RGBA; callers
+            // historically pass RGB, so pad with an opaque alpha
+            if (color != null && color.Length == 3)
+                color = new float[] { color[0], color[1], color[2], 1f };
+
             // fully opaque materials must say so; the schema default (BLEND)
             // previously leaked onto every material regardless of alpha
             bool isTransparent = color != null && color.Length > 3 && color[3] < 1f;
@@ -368,6 +373,9 @@ namespace GLTF2BIM.GLTF {
                 PBRMetallicRoughness = new glTFPBRMetallicRoughness()
                 {
                     BaseColorFactor = color,
+                    BaseColorTexture = textureIdx.HasValue
+                        ? new glTFTextureInfo { Index = textureIdx.Value }
+                        : null,
                     MetallicFactor = 0f,
                     RoughnessFactor = 1f,
                 },
@@ -378,7 +386,7 @@ namespace GLTF2BIM.GLTF {
 
             _gltf.Materials.Add(material);
             var materialIdx = (uint)_gltf.Materials.Count - 1;
-            materialsInstancing.Add(GetMaterialKey(name, color), materialIdx);
+            materialsInstancing.Add(GetMaterialKey(name, color, textureIdx), materialIdx);
 
             return materialIdx;
         }
@@ -389,15 +397,15 @@ namespace GLTF2BIM.GLTF {
 
             foreach (var primitive in primitives)
             {
-                keyBuilder.Append($"{primitive.Attributes.Normal}:{primitive.Attributes.Position}:{primitive.Indices}:{primitive.Material}:{primitive.Mode}:");
+                keyBuilder.Append($"{primitive.Attributes.Normal}:{primitive.Attributes.Position}:{primitive.Attributes.TexCoord0}:{primitive.Indices}:{primitive.Material}:{primitive.Mode}:");
             }
 
             return keyBuilder.ToString();
         }
 
-        public string GetMaterialKey(string name, float[] color)
+        public string GetMaterialKey(string name, float[] color, uint? textureIdx = null)
         {
-            return $":{name}:{color[0]}:{color[1]}:{color[2]}";
+            return $":{name}:{color[0]}:{color[1]}:{color[2]}:{textureIdx}";
         }
 
 
@@ -415,16 +423,19 @@ namespace GLTF2BIM.GLTF {
         }
 
         private int GetOrAddIndexSegment(uint[] indices) {
-            // narrow index component type to the smallest that fits
+            // narrow index component type to the smallest that fits;
+            // the max value of each index type (0xFF, 0xFFFF) is the
+            // primitive-restart value in glTF and must not appear as an
+            // index — hence strict comparisons
             uint maxIndex = indices.Max();
             BufferSegment indexBuffer;
-            if (maxIndex <= 0xFF) {
+            if (maxIndex < 0xFF) {
                 var byteIndices = new List<byte>();
                 foreach (var index in indices)
                     byteIndices.Add(Convert.ToByte(index));
                 indexBuffer = new BufferScalar1Segment(byteIndices.ToArray());
             }
-            else if (maxIndex <= 0xFFFF) {
+            else if (maxIndex < 0xFFFF) {
                 var shortIndices = new List<ushort>();
                 foreach (var index in indices)
                     shortIndices.Add(Convert.ToUInt16(index));
@@ -443,6 +454,10 @@ namespace GLTF2BIM.GLTF {
         }
 
         public uint AddPrimitive(float[] vertices, float[] normals, uint[] faces) {
+            return AddPrimitive(vertices, normals, null, faces);
+        }
+
+        public uint AddPrimitive(float[] vertices, float[] normals, float[] uvs, uint[] faces) {
             // ensure vertex and face data is available
             if (vertices is null || faces is null)
                 throw new Exception(StringLib.VertexFaceIsRequired);
@@ -456,6 +471,17 @@ namespace GLTF2BIM.GLTF {
                 if (normals != null)
                     nBuffIdx = GetOrAddVectorSegment(normals);
 
+                // process texture coordinate data if available
+                int uvBuffIdx = -1;
+                if (uvs != null) {
+                    var uvBuffer = new BufferUVSegment(uvs);
+                    uvBuffIdx = _bufferSegments.IndexOf(uvBuffer);
+                    if (uvBuffIdx < 0) {
+                        _bufferSegments.Add(uvBuffer);
+                        uvBuffIdx = _bufferSegments.Count - 1;
+                    }
+                }
+
                 // process face data
                 var fBuffIdx = GetOrAddIndexSegment(faces);
 
@@ -465,7 +491,8 @@ namespace GLTF2BIM.GLTF {
                         Indices = (uint)fBuffIdx,
                         Attributes = new glTFAttributes {
                             Position = (uint)vBuffIdx,
-                            Normal = nBuffIdx >= 0 ? (uint)nBuffIdx : (uint?)null
+                            Normal = nBuffIdx >= 0 ? (uint)nBuffIdx : (uint?)null,
+                            TexCoord0 = uvBuffIdx >= 0 ? (uint)uvBuffIdx : (uint?)null
                         }
                     }
                 );
@@ -508,6 +535,12 @@ namespace GLTF2BIM.GLTF {
         public uint AddMaterial(uint primitiveIndex,
                                 string name, float[] color,
                                 glTFExtension[] exts, glTFExtras extras) {
+            return AddMaterial(primitiveIndex, name, color, null, exts, extras);
+        }
+
+        public uint AddMaterial(uint primitiveIndex,
+                                string name, float[] color, uint? textureIdx,
+                                glTFExtension[] exts, glTFExtras extras) {
             if (PeekNode() is glTFNode currentNode) {
                 if (_primQueue.Count > primitiveIndex) {
                     var prim = _primQueue.ElementAt((int)primitiveIndex);
@@ -516,10 +549,10 @@ namespace GLTF2BIM.GLTF {
                         _gltf.Materials = new List<glTFMaterial>();
 
                     // searching for an already existent material
-                    var materialIdx = SearchMaterial(name, color);
+                    var materialIdx = SearchMaterial(name, color, textureIdx);
 
                     // if it aready exists reuse it, otherwise, create a new material
-                    prim.Material = (materialIdx == null) ? CreateMaterial(name, color, exts, extras) : materialIdx;
+                    prim.Material = (materialIdx == null) ? CreateMaterial(name, color, textureIdx, exts, extras) : materialIdx;
 
                     return prim.Material.Value;
                 }
@@ -528,6 +561,43 @@ namespace GLTF2BIM.GLTF {
             }
             else
                 throw new Exception(StringLib.NoParentNode);
+        }
+
+        /// <summary>
+        /// Register an image (embedded as a data URI) and a texture referencing
+        /// it. Returns the texture index for use with AddMaterial. Duplicate
+        /// image bytes are deduplicated and return the existing texture index.
+        /// </summary>
+        /// <param name="imageBytes">Encoded image file bytes (PNG or JPEG)</param>
+        /// <param name="mimeType">"image/png" or "image/jpeg"</param>
+        public uint AddTexture(byte[] imageBytes, string mimeType) {
+            if (imageBytes is null || imageBytes.Length == 0)
+                throw new Exception("Image data is required to add a texture");
+
+            string key;
+            using (var sha = System.Security.Cryptography.SHA256.Create())
+                key = Convert.ToBase64String(sha.ComputeHash(imageBytes));
+
+            if (texturesInstancing.TryGetValue(key, out uint existingIdx))
+                return existingIdx;
+
+            if (_gltf.Images is null)
+                _gltf.Images = new List<glTFImage>();
+            if (_gltf.Textures is null)
+                _gltf.Textures = new List<glTFTexture>();
+
+            _gltf.Images.Add(new glTFImage {
+                Uri = $"data:{mimeType};base64,{Convert.ToBase64String(imageBytes)}",
+                MimeType = mimeType
+            });
+
+            _gltf.Textures.Add(new glTFTexture {
+                Source = (uint)_gltf.Images.Count - 1
+            });
+
+            var textureIdx = (uint)_gltf.Textures.Count - 1;
+            texturesInstancing.Add(key, textureIdx);
+            return textureIdx;
         }
 
 

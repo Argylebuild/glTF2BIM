@@ -42,5 +42,11 @@ namespace GLTF2BIM.GLTF.Schema {
 
         [JsonProperty("materials")]
         public List<glTFMaterial> Materials { get; set; } = null;
+
+        [JsonProperty("textures")]
+        public List<glTFTexture> Textures { get; set; } = null;
+
+        [JsonProperty("images")]
+        public List<glTFImage> Images { get; set; } = null;
     }
 }
