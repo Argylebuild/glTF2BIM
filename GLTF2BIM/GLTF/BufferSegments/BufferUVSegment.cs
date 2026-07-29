@@ -27,15 +27,20 @@ namespace GLTF2BIM.GLTF.BufferSegments {
         public override int GetHashCode() => base.GetHashCode();
 
         void SetBounds(float[] uvs) {
-            List<float> u = new List<float>();
-            List<float> v = new List<float>();
+            // single pass, no intermediate allocations
+            float minU = float.MaxValue, minV = float.MaxValue;
+            float maxU = float.MinValue, maxV = float.MinValue;
+
             for (int i = 0; i < uvs.Length; i += 2) {
-                u.Add(uvs[i]);
-                v.Add(uvs[i + 1]);
+                float u = uvs[i], v = uvs[i + 1];
+                if (u < minU) minU = u;
+                if (u > maxU) maxU = u;
+                if (v < minV) minV = v;
+                if (v > maxV) maxV = v;
             }
 
-            _min = new float[] { u.Min(), v.Min() };
-            _max = new float[] { u.Max(), v.Max() };
+            _min = new float[] { minU, minV };
+            _max = new float[] { maxU, maxV };
         }
     }
 }

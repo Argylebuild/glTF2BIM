@@ -414,11 +414,21 @@ namespace GLTF2BIM.GLTF {
         #region Node Mesh
         private int GetOrAddVectorSegment(float[] vectors) {
             var vectorBuffer = new BufferVectorSegment(vectors);
-            var buffIdx = _bufferSegments.IndexOf(vectorBuffer);
-            if (buffIdx < 0) {
-                _bufferSegments.Add(vectorBuffer);
-                buffIdx = _bufferSegments.Count - 1;
-            }
+            return GetOrAddSegment(vectorBuffer);
+        }
+
+        /// <summary>
+        /// Content-keyed segment dedup. Replaces the historical
+        /// _bufferSegments.IndexOf linear scan (quadratic across a large export)
+        /// with a dictionary lookup; same dedup decisions, same segment order.
+        /// </summary>
+        private int GetOrAddSegment(BufferSegment segment) {
+            if (_bufferSegmentIndex.TryGetValue(segment.ContentKey, out int buffIdx))
+                return buffIdx;
+
+            _bufferSegments.Add(segment);
+            buffIdx = _bufferSegments.Count - 1;
+            _bufferSegmentIndex.Add(segment.ContentKey, buffIdx);
             return buffIdx;
         }
 
@@ -445,12 +455,7 @@ namespace GLTF2BIM.GLTF {
                 indexBuffer = new BufferScalar4Segment(indices);
             }
 
-            var iBuffIdx = _bufferSegments.IndexOf(indexBuffer);
-            if (iBuffIdx < 0) {
-                _bufferSegments.Add(indexBuffer);
-                iBuffIdx = _bufferSegments.Count - 1;
-            }
-            return iBuffIdx;
+            return GetOrAddSegment(indexBuffer);
         }
 
         public uint AddPrimitive(float[] vertices, float[] normals, uint[] faces) {
@@ -474,12 +479,7 @@ namespace GLTF2BIM.GLTF {
                 // process texture coordinate data if available
                 int uvBuffIdx = -1;
                 if (uvs != null) {
-                    var uvBuffer = new BufferUVSegment(uvs);
-                    uvBuffIdx = _bufferSegments.IndexOf(uvBuffer);
-                    if (uvBuffIdx < 0) {
-                        _bufferSegments.Add(uvBuffer);
-                        uvBuffIdx = _bufferSegments.Count - 1;
-                    }
+                    uvBuffIdx = GetOrAddSegment(new BufferUVSegment(uvs));
                 }
 
                 // process face data

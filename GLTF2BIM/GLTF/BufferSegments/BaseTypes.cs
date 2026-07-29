@@ -15,6 +15,13 @@ namespace GLTF2BIM.GLTF.BufferSegments.BaseTypes {
 
         public abstract object[] Min { get; }
         public abstract object[] Max { get; }
+
+        /// <summary>
+        /// Content-identity key for O(1) dedup lookups: accessor type + component
+        /// type + SHA256 of the raw bytes. Typed so byte-identical data can never
+        /// dedup across accessor shapes (e.g. VEC2 UVs onto VEC3 positions).
+        /// </summary>
+        public abstract string ContentKey { get; }
     }
 
     abstract class BufferSegment<T> : BufferSegment {
@@ -54,6 +61,8 @@ namespace GLTF2BIM.GLTF.BufferSegments.BaseTypes {
         }
 
         public override int GetHashCode() => base.GetHashCode();
+
+        public override string ContentKey => $"{Type}:{DataType}:{ComputeHash()}";
 
         string ComputeHash() {
             if (_hash is null)

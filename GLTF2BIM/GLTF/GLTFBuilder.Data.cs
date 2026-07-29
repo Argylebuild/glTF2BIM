@@ -10,6 +10,13 @@ namespace GLTF2BIM.GLTF {
         string _name;
         public readonly glTF _gltf = null;
         public readonly List<BufferSegment> _bufferSegments = new List<BufferSegment>();
+
+        /// <summary>
+        /// Segment index by content key (type + data hash) — O(1) dedup lookup in
+        /// place of scanning _bufferSegments, which is quadratic on large models.
+        /// Kept strictly in sync with _bufferSegments (append-only).
+        /// </summary>
+        public readonly Dictionary<string, int> _bufferSegmentIndex = new Dictionary<string, int>();
         public readonly Queue<glTFMeshPrimitive> _primQueue = new Queue<glTFMeshPrimitive>();
         public readonly Dictionary<string, int> meshesInstancing;
         public readonly Dictionary<string, uint> materialsInstancing;
