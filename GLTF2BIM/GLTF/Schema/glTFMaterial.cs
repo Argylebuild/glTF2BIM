@@ -47,6 +47,12 @@ namespace GLTF2BIM.GLTF.Schema {
         [JsonProperty("baseColorFactor")]
         public float[] BaseColorFactor { get; set; }
 
+        /// <summary>
+        /// Base color texture; multiplied by BaseColorFactor when both present
+        /// </summary>
+        [JsonProperty("baseColorTexture")]
+        public glTFTextureInfo BaseColorTexture { get; set; }
+
         [JsonProperty("metallicFactor")]
         public float MetallicFactor { get; set; }
 
@@ -63,7 +69,8 @@ namespace GLTF2BIM.GLTF.Schema {
             if (obj is glTFPBRMetallicRoughness other)
                 return BaseColorFactor[0] == other.BaseColorFactor[0] &&
                        BaseColorFactor[1] == other.BaseColorFactor[1] &&
-                       BaseColorFactor[2] == other.BaseColorFactor[2];
+                       BaseColorFactor[2] == other.BaseColorFactor[2] &&
+                       BaseColorTexture?.Index == other.BaseColorTexture?.Index;
             return false;
         }
     }

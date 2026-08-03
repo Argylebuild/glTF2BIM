@@ -25,9 +25,15 @@ namespace GLTF2BIM.GLTF.Schema {
         [JsonProperty("NORMAL")]
         public uint? Normal { get; set; }
 
+        /// <summary>
+        /// The index of the accessor for texture coordinate set 0
+        /// </summary>
+        [JsonProperty("TEXCOORD_0")]
+        public uint? TexCoord0 { get; set; }
+
         public override bool Equals(object obj) {
             if (obj is glTFAttributes other)
-                return Position.Equals(other.Position) && Normal.Equals(other.Normal);
+                return Position.Equals(other.Position) && Normal.Equals(other.Normal) && TexCoord0.Equals(other.TexCoord0);
             return false;
         }
 
