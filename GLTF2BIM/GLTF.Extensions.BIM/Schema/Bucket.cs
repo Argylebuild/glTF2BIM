@@ -110,17 +110,20 @@ namespace GLTF2BIM.GLTF.Extensions.BIM.Schema
 		{
 			var r = StringToRandomFloat(stringSeed + "r");
 			var g = StringToRandomFloat(stringSeed + "g");
-			var b = 1 - (r + g);
+			var b = StringToRandomFloat(stringSeed + "b");
 			Vector3 c = new Vector3(r, g, b);
 
 			return c;
-			
+
 			//---------------local functions----------------
 			float StringToRandomFloat(string input)
 			{
-				var seed = input.GetHashCode();
 				Random rand = new Random(input.GetHashCode());
-				return (float) rand.Next(0,256) / 256f;
+				// Additive AR displays render dark channels as near-invisible, so
+				// every random channel is floored at 0.5 (range [0.5, 1.0]).
+				// (The previous derived-blue formula b = 1-(r+g) could also go
+				// negative, producing invalid glTF colors.)
+				return 0.5f + (float)rand.Next(0, 129) / 256f;
 			}
 		}
 
