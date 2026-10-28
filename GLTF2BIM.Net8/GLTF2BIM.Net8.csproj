@@ -2,12 +2,15 @@
 
   <!-- ============== core settings ============== -->
   <PropertyGroup>
+    <!-- Revit 2025/2026 run on .NET 8 and Revit 2027+ on .NET 10. The target framework follows the
+         configuration name, so this one project builds every SDK-style Revit year. -->
     <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework Condition="$(Configuration.Contains('2027'))">net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>false</ImplicitUsings>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>Argyle.glTF2BIM</AssemblyName>
-    <Configurations>Debug;Release;Release2025;Release2026;Debug2025;Debug2026</Configurations>
+    <Configurations>Debug;Release;Release2025;Release2026;Release2027;Debug2025;Debug2026;Debug2027</Configurations>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
@@ -32,6 +35,17 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2026|Any CPU'">
     <OutputPath>..\..\..\build\Release2026\</OutputPath> <!-- mirrors legacy layout -->
     <DefineConstants>REVIT;REVIT2026</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <!-- ============== 2027 build configuration (.NET 10) ============== -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2027|Any CPU'">
+    <OutputPath>..\..\..\build\Release2027\</OutputPath>
+    <DefineConstants>REVIT;REVIT2027</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2027|Any CPU'">
+    <OutputPath>..\..\..\build\Release2027\</OutputPath> <!-- mirrors legacy layout -->
+    <DefineConstants>REVIT;REVIT2027</DefineConstants>
     <Optimize>true</Optimize>
   </PropertyGroup>
 
